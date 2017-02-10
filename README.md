@@ -1,3 +1,3 @@
 # PenPalm
 
-One pal for life
+Two palms, one pal... for life
