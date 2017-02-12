@@ -1,3 +1,4 @@
 # PenPalm
 
-One pal for life
+to run the server :
+node index.js
