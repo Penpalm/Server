@@ -1,9 +1,19 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+	host     : 'localhost',
+	user     : '< MySQL username >',
+	password : '< MySQL password >',
+	database : '<your database name>'
+});
+var users = require('./routes/users')(connection);
 
 var userList = [];
 var typingUsers = {};
+
+app.use('/users', users);
 
 app.get('/', function(req, res){
   res.send('<h1>AppCoda - SocketChat Server</h1>');
