@@ -1,6 +1,7 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var bodyParser = require('body-parser');
 var mysql = require('mysql');
 var connection = mysql.createConnection({
 	host     : '35.185.61.227',
@@ -16,6 +17,7 @@ connection.connect(function(err){
 	console.log('Connection established');
 });
 app.set('connection', connection);
+app.use(bodyParser.json());
 var users = require('./routes/users');
 
 var userList = [];

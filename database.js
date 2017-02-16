@@ -9,16 +9,44 @@ var pool = mysql.createPool({
 	supportBigNumbers: true
 });
 
-// Get records from a city
 exports.getPal = function(user_id, callback) {
-	var sql = "SELECT * FROM USER WHERE fk_pal = ?";
-	// get a connection from the pool
+	var sql = "SELECT * FROM USER WHERE fk_pal = ? LIMIT 1";
+
 	pool.getConnection(function(err, connection) {
-		if(err) { console.log(err); callback(true); return; }
-		// make the query
+		if (err) {
+			console.log(err);
+			callback(true);
+			return;
+		}
 		connection.query(sql, [user_id], function(err, results) {
 			connection.release();
-			if(err) { console.log(err); callback(true); return; }
+			if (err) {
+				console.log(err);
+				callback(true);
+				return;
+			}
+			callback(false, results);
+		});
+	});
+};
+
+exports.createUser = function(config, callback) {
+	var sql = "INSERT INTO USER (first_name, last_name) VALUES (?, ?)";
+
+	pool.getConnection(function(err, connection) {
+		if (err) {
+			console.log(err);
+			callback(true);
+			return;
+		}
+
+		connection.query(sql, [config.first_name, config.last_name], function(err, results) {
+			connection.release();
+			if (err) {
+				console.log(err);
+				callback(true);
+				return;
+			}
 			callback(false, results);
 		});
 	});
