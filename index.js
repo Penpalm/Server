@@ -3,12 +3,20 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mysql = require('mysql');
 var connection = mysql.createConnection({
-	host     : 'localhost',
-	user     : '< MySQL username >',
-	password : '< MySQL password >',
-	database : '<your database name>'
+	host     : '35.185.61.227',
+	user     : 'root',
+	password : 'palm',
+	database : 'penpalm'
 });
-var users = require('./routes/users')(connection);
+connection.connect(function(err){
+	if(err){
+		console.log('Error connecting to Db');
+		return;
+	}
+	console.log('Connection established');
+});
+app.set('connection', connection);
+var users = require('./routes/users');
 
 var userList = [];
 var typingUsers = {};
@@ -74,7 +82,7 @@ io.on('connection', function(clientSocket){
       var foundUser = false;
       for (var i=0; i<userList.length; i++) {
         if (userList[i]["nickname"] == clientNickname) {
-          userList[i]["isConnected"] = true
+          userList[i]["isConnected"] = true;
           userList[i]["id"] = clientSocket.id;
           userInfo = userList[i];
           foundUser = true;
@@ -85,7 +93,7 @@ io.on('connection', function(clientSocket){
       if (!foundUser) {
         userInfo["id"] = clientSocket.id;
         userInfo["nickname"] = clientNickname;
-        userInfo["isConnected"] = true
+        userInfo["isConnected"] = true;
         userList.push(userInfo);
       }
 
@@ -108,3 +116,4 @@ io.on('connection', function(clientSocket){
   });
 
 });
+// connection.end();
