@@ -1,9 +1,15 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+var users = require('./routes/users');
 
 var userList = [];
 var typingUsers = {};
+
+app.use('/users', users);
 
 app.get('/', function(req, res){
   res.send('<h1>AppCoda - SocketChat Server</h1>');
@@ -64,7 +70,7 @@ io.on('connection', function(clientSocket){
       var foundUser = false;
       for (var i=0; i<userList.length; i++) {
         if (userList[i]["nickname"] == clientNickname) {
-          userList[i]["isConnected"] = true
+          userList[i]["isConnected"] = true;
           userList[i]["id"] = clientSocket.id;
           userInfo = userList[i];
           foundUser = true;
@@ -75,7 +81,7 @@ io.on('connection', function(clientSocket){
       if (!foundUser) {
         userInfo["id"] = clientSocket.id;
         userInfo["nickname"] = clientNickname;
-        userInfo["isConnected"] = true
+        userInfo["isConnected"] = true;
         userList.push(userInfo);
       }
 
