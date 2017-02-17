@@ -1,3 +1,5 @@
+var models = require('./models');
+var queryBuilder = require('./query-builder');
 var mysql = require('mysql');
 
 var pool = mysql.createPool({
@@ -31,8 +33,8 @@ exports.getPal = function(user_id, callback) {
 };
 
 exports.createUser = function(config, callback) {
-	var sql = "INSERT INTO USER (first_name, last_name) VALUES (?, ?)";
-
+	var sql = queryBuilder.getInsert(config, "USER", models.getUserModel());
+console.log(sql);
 	pool.getConnection(function(err, connection) {
 		if (err) {
 			console.log(err);

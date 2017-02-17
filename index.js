@@ -2,21 +2,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
-var mysql = require('mysql');
-var connection = mysql.createConnection({
-	host     : '35.185.61.227',
-	user     : 'root',
-	password : 'palm',
-	database : 'penpalm'
-});
-connection.connect(function(err){
-	if(err){
-		console.log('Error connecting to Db');
-		return;
-	}
-	console.log('Connection established');
-});
-app.set('connection', connection);
+
 app.use(bodyParser.json());
 var users = require('./routes/users');
 
@@ -118,4 +104,3 @@ io.on('connection', function(clientSocket){
   });
 
 });
-// connection.end();
