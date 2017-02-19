@@ -34,7 +34,7 @@ exports.getPal = function(user_id, callback) {
 
 exports.createUser = function(config, callback) {
 	var sql = queryBuilder.getInsert(config, "USER", models.getUserModel());
-console.log(sql);
+
 	pool.getConnection(function(err, connection) {
 		if (err) {
 			console.log(err);
