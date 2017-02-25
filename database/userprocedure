@@ -1,0 +1,18 @@
+DROP PROCEDURE IF EXISTS GET_USER_WITH_FB_ID;
+
+CREATE PROCEDURE GET_USER_WITH_FB_ID
+  (IN p_fb_id VARCHAR(45),
+   IN p_first_name VARCHAR(45),
+   IN p_last_name VARCHAR(45),
+   IN p_locale VARCHAR(45),
+   IN p_gender VARCHAR(45),
+   IN p_email VARCHAR(45),
+   IN p_birthday DATE)
+
+  BEGIN
+    IF NOT EXISTS (SELECT id FROM USER WHERE fb_id = p_fb_id LIMIT 1) THEN
+      INSERT INTO USER (fb_id, created_on, first_name, last_name, locale, gender, email, birthday)
+      VALUES (p_fb_id, NOW(), p_first_name, p_last_name, p_locale, p_gender, p_email, p_birthday);
+    END IF;
+    SELECT id, username, fk_pal FROM USER WHERE fb_id = p_fb_id LIMIT 1;
+  END

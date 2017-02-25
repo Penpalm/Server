@@ -1,9 +1,21 @@
 var database = require('../database/connection');
+var userService = require('../services/user-service');
 var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res) {
-	res.send('get a user');
+	var auth = req.header('Authorization');
+	userService.getUser(auth, function(success, user) {
+		if (success) {
+			if (user) {
+				res.status(200).send(user);
+			} else {
+				res.status(204).send("user not created/fb user not found");
+			}
+		} else {
+			res.status(500).send("system failure");
+		}
+	});
 });
 
 router.get('/:id/pal', function(req, res) {
@@ -22,12 +34,10 @@ router.get('/:id/pal', function(req, res) {
 	});
 });
 
-router.post('/', function (req, res) {
-	res.send('post a user');
-});
+router.get('/:id/messages', function(req, res) {
+	var id = req.param('id');
 
-router.post('/create', function (req, res) {
-	database.createUser(req.body, function(err, results) {
+	database.getPal(id, function(err, results) {
 		if (err) {
 			res.status(500).send("Server Error");
 		} else {
@@ -38,8 +48,10 @@ router.post('/create', function (req, res) {
 			}
 		}
 	});
+});
 
-	// res.send(req.body);
+router.post('/', function (req, res) {
+	res.send('post a user');
 });
 
 module.exports = router;
